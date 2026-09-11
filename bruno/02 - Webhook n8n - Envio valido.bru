@@ -1,0 +1,40 @@
+meta {
+  name: Webhook n8n - Envio valido
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{n8nWebhookUrl}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nome": "Teste Bruno",
+    "email": "teste@exemplo.com",
+    "telefone": "",
+    "mensagem": "Mensagem de teste enviada via Bruno",
+    "origem": "formulario-web",
+    "enviadoEm": "2026-09-11T12:00:00.000Z"
+  }
+}
+
+vars:pre-request {
+  n8nWebhookUrl: http://localhost:5678/webhook-test/28dbd8eb-eddc-40c9-bd6b-4211b33f96d0
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  Simula exatamente o payload que a Server Action `submitForm` (src/app/actions.ts) envia
+  para o n8n, sem passar pelo Next.js. Útil para testar/depurar o workflow do n8n
+  isoladamente (método HTTP, ativação do workflow, formato esperado do body).
+}

@@ -1,0 +1,23 @@
+meta {
+  name: App Home
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{appBaseUrl}}
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  appBaseUrl: http://localhost:3000/
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  Verifica se o app Next.js está no ar (`npm run dev`) antes de testar o formulário.
+}
