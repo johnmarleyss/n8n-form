@@ -29,16 +29,18 @@ function FieldError({ messages }: { messages?: string[] }) {
   );
 }
 
+const inputClass =
+  "w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100";
+
+const labelClass = "mb-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100";
+
 export function ContactForm() {
   const [state, formAction] = useActionState(submitForm, initialState);
 
   return (
     <form action={formAction} className="flex w-full flex-col gap-5" noValidate>
       <div>
-        <label
-          htmlFor="nome"
-          className="mb-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100"
-        >
+        <label htmlFor="nome" className={labelClass}>
           Nome
         </label>
         <input
@@ -47,16 +49,13 @@ export function ContactForm() {
           type="text"
           required
           autoComplete="name"
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className={inputClass}
         />
         <FieldError messages={state.errors?.nome} />
       </div>
 
       <div>
-        <label
-          htmlFor="email"
-          className="mb-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100"
-        >
+        <label htmlFor="email" className={labelClass}>
           E-mail
         </label>
         <input
@@ -65,33 +64,74 @@ export function ContactForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className={inputClass}
         />
         <FieldError messages={state.errors?.email} />
       </div>
 
       <div>
-        <label
-          htmlFor="telefone"
-          className="mb-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100"
-        >
-          Telefone <span className="text-zinc-400">(opcional)</span>
+        <label htmlFor="telefone" className={labelClass}>
+          Telefone
         </label>
         <input
           id="telefone"
           name="telefone"
           type="tel"
+          required
           autoComplete="tel"
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className={inputClass}
         />
         <FieldError messages={state.errors?.telefone} />
       </div>
 
       <div>
-        <label
-          htmlFor="mensagem"
-          className="mb-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100"
-        >
+        <label htmlFor="empresa" className={labelClass}>
+          Empresa <span className="text-zinc-400">(opcional)</span>
+        </label>
+        <input
+          id="empresa"
+          name="empresa"
+          type="text"
+          autoComplete="organization"
+          className={inputClass}
+        />
+        <FieldError messages={state.errors?.empresa} />
+      </div>
+
+      <div>
+        <label htmlFor="interesse" className={labelClass}>
+          Interesse
+        </label>
+        <input
+          id="interesse"
+          name="interesse"
+          type="text"
+          required
+          placeholder="Ex.: Desenvolvimento de sistema"
+          className={inputClass}
+        />
+        <FieldError messages={state.errors?.interesse} />
+      </div>
+
+      <div>
+        <label htmlFor="orcamento" className={labelClass}>
+          Orçamento estimado <span className="text-zinc-400">(opcional)</span>
+        </label>
+        <input
+          id="orcamento"
+          name="orcamento"
+          type="number"
+          min={0}
+          step="0.01"
+          inputMode="decimal"
+          placeholder="Ex.: 15000"
+          className={inputClass}
+        />
+        <FieldError messages={state.errors?.orcamento} />
+      </div>
+
+      <div>
+        <label htmlFor="mensagem" className={labelClass}>
           Mensagem
         </label>
         <textarea
@@ -99,7 +139,7 @@ export function ContactForm() {
           name="mensagem"
           rows={5}
           required
-          className="w-full resize-none rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className={`${inputClass} resize-none`}
         />
         <FieldError messages={state.errors?.mensagem} />
       </div>

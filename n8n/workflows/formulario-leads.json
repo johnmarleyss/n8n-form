@@ -1,0 +1,795 @@
+[
+  {
+    "updatedAt": "2026-09-11T23:23:21.817Z",
+    "createdAt": "2026-09-11T21:35:00.600Z",
+    "id": "RzwllJkM6RGnMZZZ",
+    "name": "formulario",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "formulario-contato",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "a2557ec4-ee38-4e8b-8b74-f251d9d562c5",
+        "name": "Webhook",
+        "webhookId": "a7890962-b5d5-4372-b27f-ba00522cc42f"
+      },
+      {
+        "parameters": {
+          "jsCode": "return $input.all().map(item => ({ json: item.json.body }));"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          224,
+          0
+        ],
+        "id": "a887533f-bd78-4196-a539-610873e7faa9",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "d11bef96-ad81-4157-ab69-091544bc9f81",
+                "leftValue": "={{ $json.nome }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "19c595be-7180-446d-9fd5-7e5165dbad63",
+                "leftValue": "={{ $json.email }}",
+                "rightValue": "^[^\\s@]+@[^\\s@]+\\.[a-z]{2,}$",
+                "operator": {
+                  "type": "string",
+                  "operation": "regex"
+                }
+              },
+              {
+                "id": "d10f926d-68f8-4d08-b20f-b8c0d7df338f",
+                "leftValue": "={{ Number($json.orcamento) }}",
+                "rightValue": 0,
+                "operator": {
+                  "type": "number",
+                  "operation": "gt"
+                }
+              },
+              {
+                "id": "065bf693-3a63-48bf-9c69-01b0839a4dfd",
+                "leftValue": "={{ ['Desenvolvimento de sistema','Site institucional','E-commerce','Outro'].includes($json.interesse) }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          448,
+          0
+        ],
+        "id": "24f8b057-e603-4f3d-b012-6a6ca5dbd072",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ { \"erro\": \"dados inválidos\" } }}",
+          "options": {
+            "responseCode": 400
+          }
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          672,
+          96
+        ],
+        "id": "7a30d51c-1b0a-425a-9b14-2be81bff5898",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "operation": "select",
+          "schema": {
+            "__rl": true,
+            "value": "public",
+            "mode": "list",
+            "cachedResultName": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "leads",
+            "mode": "list",
+            "cachedResultName": "leads"
+          },
+          "where": {
+            "values": [
+              {
+                "column": "email",
+                "value": "={{ $json.email }}"
+              }
+            ]
+          },
+          "sort": {
+            "values": []
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.7,
+        "position": [
+          672,
+          -96
+        ],
+        "id": "127fdb82-f9da-4866-b6ca-71ae4c2140b1",
+        "name": "Select rows from a table",
+        "alwaysOutputData": true,
+        "credentials": {
+          "postgres": {
+            "id": "n1RKhl7eb8pzqnst",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "863a4c0d-5e05-45b5-93c7-774fdbc586b6",
+                "leftValue": "={{ $json.id }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "number",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          864,
+          -80
+        ],
+        "id": "e19b5743-5c06-4665-93d9-167df1dfea32",
+        "name": "If1"
+      },
+      {
+        "parameters": {
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "leads",
+            "mode": "list",
+            "cachedResultName": "leads"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "nome": "={{ $('If').item.json.nome }}",
+              "email": "={{ $('If').item.json.email }}",
+              "telefone": "={{ $('If').item.json.telefone }}",
+              "empresa": "={{ $('If').item.json.empresa }}",
+              "interesse": "={{ $('If').item.json.interesse }}",
+              "orcamento": "={{ $('If').item.json.orcamento }}",
+              "mensagem": "={{ $('If').item.json.mensagem }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "nome",
+                "displayName": "nome",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "email",
+                "displayName": "email",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "telefone",
+                "displayName": "telefone",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "empresa",
+                "displayName": "empresa",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "interesse",
+                "displayName": "interesse",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "orcamento",
+                "displayName": "orcamento",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "mensagem",
+                "displayName": "mensagem",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "criado_em",
+                "displayName": "criado_em",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.7,
+        "position": [
+          1088,
+          16
+        ],
+        "id": "8b543d29-b154-4932-84b3-cc484efe7244",
+        "name": "Insert rows in a table",
+        "credentials": {
+          "postgres": {
+            "id": "n1RKhl7eb8pzqnst",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "leads",
+            "mode": "list",
+            "cachedResultName": "leads"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "email": "={{ $json.email }}",
+              "nome": "={{ $json.nome }}",
+              "id": "={{ $json.id }}",
+              "telefone": "={{ $json.telefone }}",
+              "empresa": "={{ $json.empresa }}",
+              "interesse": "={{ $json.interesse }}",
+              "orcamento": "={{ $json.orcamento }}",
+              "mensagem": "={{ $json.mensagem }}"
+            },
+            "matchingColumns": [
+              "email"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "nome",
+                "displayName": "nome",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "email",
+                "displayName": "email",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "telefone",
+                "displayName": "telefone",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "empresa",
+                "displayName": "empresa",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "interesse",
+                "displayName": "interesse",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "orcamento",
+                "displayName": "orcamento",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "mensagem",
+                "displayName": "mensagem",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "criado_em",
+                "displayName": "criado_em",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.7,
+        "position": [
+          1088,
+          -176
+        ],
+        "id": "2f4ea8d6-a70e-4569-82cf-c458ff9208d5",
+        "name": "Update rows in a table",
+        "credentials": {
+          "postgres": {
+            "id": "n1RKhl7eb8pzqnst",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "e809004c-ffb8-4e9e-a544-5aa1eafda628",
+                "name": "=score",
+                "value": "={{ ($json.orcamento >= 50000 ? 40 : $json.orcamento >= 20000 ? 30 : $json.orcamento >= 5000 ? 20 : 10) + ($json.interesse === 'Desenvolvimento de sistema' ? 25 : $json.interesse === 'E-commerce' ? 20 : 10) + ($json.empresa ? 10 : 0) + ($json.telefone ? 10 : 0) }}",
+                "type": "number"
+              }
+            ]
+          },
+          "includeOtherFields": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.5,
+        "position": [
+          1376,
+          -112
+        ],
+        "id": "7505ded7-3719-459a-b76d-273690872828",
+        "name": "Score",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "leads",
+            "mode": "list",
+            "cachedResultName": "leads"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {
+              "score": "={{ $json.score }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "nome",
+                "displayName": "nome",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "email",
+                "displayName": "email",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "telefone",
+                "displayName": "telefone",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "empresa",
+                "displayName": "empresa",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "interesse",
+                "displayName": "interesse",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "orcamento",
+                "displayName": "orcamento",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "mensagem",
+                "displayName": "mensagem",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "criado_em",
+                "displayName": "criado_em",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "score",
+                "displayName": "score",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.7,
+        "position": [
+          1600,
+          -112
+        ],
+        "id": "0f77c02e-1591-429c-9ce3-1db06a28996b",
+        "name": "Update rows in a table1",
+        "credentials": {
+          "postgres": {
+            "id": "n1RKhl7eb8pzqnst",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ { \"ok\": true, \"id\": $json.id, \"score\": $json.score } }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          1824,
+          -112
+        ],
+        "id": "d6e9776b-0067-4799-9415-459a405bfd34",
+        "name": "Respond to Webhook1"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Select rows from a table",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Select rows from a table": {
+        "main": [
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "node": "Update rows in a table",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Insert rows in a table",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update rows in a table": {
+        "main": [
+          [
+            {
+              "node": "Score",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Insert rows in a table": {
+        "main": [
+          [
+            {
+              "node": "Score",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Score": {
+        "main": [
+          [
+            {
+              "node": "Update rows in a table1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update rows in a table1": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Respond to Webhook1": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate"
+    },
+    "staticData": null,
+    "meta": {
+      "templateCredsSetupCompleted": true
+    },
+    "nodeGroups": [],
+    "pinData": {},
+    "versionId": "ba9c7a61-661f-49b4-91bc-8106a7a61fa4",
+    "activeVersionId": "ba9c7a61-661f-49b4-91bc-8106a7a61fa4",
+    "versionCounter": 244,
+    "triggerCount": 1,
+    "sourceWorkflowId": null,
+    "tags": [],
+    "versionMetadata": {
+      "name": "Version ba9c7a61",
+      "description": ""
+    }
+  }
+]

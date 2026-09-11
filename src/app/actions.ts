@@ -21,6 +21,9 @@ export async function submitForm(
     nome: formData.get("nome"),
     email: formData.get("email"),
     telefone: formData.get("telefone"),
+    empresa: formData.get("empresa"),
+    interesse: formData.get("interesse"),
+    orcamento: formData.get("orcamento"),
     mensagem: formData.get("mensagem"),
   };
 
@@ -52,11 +55,7 @@ export async function submitForm(
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...parsed.data,
-        origem: "formulario-web",
-        enviadoEm: new Date().toISOString(),
-      }),
+      body: JSON.stringify(parsed.data),
       signal: controller.signal,
     });
 

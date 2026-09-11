@@ -16,17 +16,18 @@ headers {
 
 body:json {
   {
-    "nome": "Teste Bruno",
-    "email": "teste@exemplo.com",
-    "telefone": "",
-    "mensagem": "Mensagem de teste enviada via Bruno",
-    "origem": "formulario-web",
-    "enviadoEm": "2026-09-11T12:00:00.000Z"
+    "nome": "João Silva",
+    "email": "joao2@email.com",
+    "telefone": "13999999999",
+    "empresa": "Empresa X",
+    "interesse": "Desenvolvimento de sistema",
+    "orcamento": 15000,
+    "mensagem": "Preciso de um sistema para minha empresa"
   }
 }
 
 vars:pre-request {
-  n8nWebhookUrl: http://localhost:5678/webhook-test/28dbd8eb-eddc-40c9-bd6b-4211b33f96d0
+  n8nWebhookUrl: http://localhost:5678/webhook-test/formulario-contato
 }
 
 assert {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * Esquema de validação do formulário.
- * Ajuste os campos aqui conforme os dados que o workflow do n8n espera receber.
+ * Os campos e nomes aqui definem exatamente o JSON enviado ao webhook do n8n.
  */
 export const formSchema = z.object({
   nome: z
@@ -14,9 +14,26 @@ export const formSchema = z.object({
   telefone: z
     .string()
     .trim()
-    .max(30, "Telefone muito longo.")
+    .min(8, "Informe um telefone válido.")
+    .max(30, "Telefone muito longo."),
+  empresa: z
+    .string()
+    .trim()
+    .max(160, "Nome da empresa muito longo.")
     .optional()
     .or(z.literal("")),
+  interesse: z
+    .string()
+    .trim()
+    .min(2, "Conte pra gente qual é o seu interesse.")
+    .max(200, "Texto muito longo."),
+  orcamento: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined ? undefined : val),
+    z.coerce
+      .number("Informe um valor numérico.")
+      .positive("Orçamento deve ser maior que zero.")
+      .optional()
+  ),
   mensagem: z
     .string()
     .trim()
