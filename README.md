@@ -9,7 +9,7 @@ Usuário → Formulário (Next.js) → Server Action → Webhook n8n → valida/
 ## Stack
 
 - **Frontend:** Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS v4
-- **Validação:** Zod, com schema único compartilhado entre form e Server Action
+- **Validação:**schema único compartilhado entre form e Server Action
 - **Envio dos dados:** Server Action (sem API route própria — a URL do webhook nunca chega ao client)
 - **Automação/backend:** n8n (self-hosted via Docker)
 - **Banco de dados:** PostgreSQL 16
@@ -82,12 +82,12 @@ A pasta `bruno/` tem uma coleção do [Bruno](https://www.usebruno.com/) pra tes
 ```
 ├── src/
 │   ├── app/
-│   │   ├── actions.ts        # Server Action: valida (zod) e envia ao webhook do n8n
+│   │   ├── actions.ts        # Server Action: valida e envia ao webhook do n8n
 │   │   └── page.tsx          # página do formulário
 │   ├── components/
 │   │   └── ContactForm.tsx   # formulário (client component)
 │   └── lib/
-│       └── schema.ts         # schema zod — fonte única de verdade dos campos
+│       └── schema.ts         # schema — fonte única de verdade dos campos
 ├── docker-compose.yml         # n8n + postgres
 ├── docker/postgres/init/      # scripts SQL (criação das tabelas)
 ├── n8n/workflows/              # workflow do n8n versionado (JSON)
